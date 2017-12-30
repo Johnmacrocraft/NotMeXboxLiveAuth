@@ -5,7 +5,7 @@ namespace Johnmacrocraft\NotMeXboxLiveAuth;
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
 use pocketmine\event\TranslationContainer;
-use pocketmine\player\event\PlayerKickEvent;
+use pocketmine\event\player\PlayerKickEvent;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\utils\InvalidCommandSyntaxException;
@@ -25,6 +25,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 		}
 		@mkdir($this->getDataFolder());
 		$this->xboxlist = new Config($this->getDataFolder() . "xbox-list.txt", Config::ENUM);
+		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 	}
 
 	/**

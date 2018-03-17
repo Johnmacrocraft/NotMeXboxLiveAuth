@@ -2,13 +2,13 @@
 
 namespace Johnmacrocraft\NotMeXboxLiveAuth;
 
-use pocketmine\plugin\PluginBase;
-use pocketmine\event\Listener;
-use pocketmine\event\TranslationContainer;
-use pocketmine\event\player\PlayerKickEvent;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\utils\InvalidCommandSyntaxException;
+use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerKickEvent;
+use pocketmine\lang\TranslationContainer;
+use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 
@@ -39,7 +39,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 	public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool {
 		switch($command->getName()) {
 			case "xboxlist":
-				if(count($args) === 0 or count($args) > 2) {
+				if(count($args) === 0 || count($args) > 2) {
 					throw new InvalidCommandSyntaxException();
 				}
 
@@ -104,7 +104,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 	 * @param PlayerKickEvent $event
 	 */
 	public function onPlayerKick(PlayerKickEvent $event) {
-		if($event->getReason() === "disconnectionScreen.notAuthenticated" and $this->xboxlist->exists(strtolower($event->getPlayer()->getName()))) {
+		if($event->getReason() === "disconnectionScreen.notAuthenticated" && $this->xboxlist->exists(strtolower($event->getPlayer()->getName()))) {
 			$event->setCancelled();
 		}
 	}

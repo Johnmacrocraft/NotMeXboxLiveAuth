@@ -19,6 +19,7 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\utils\InvalidCommandSyntaxException;
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerKickEvent;
 use pocketmine\lang\TranslationContainer;
 use pocketmine\plugin\PluginBase;
@@ -31,12 +32,17 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 	public $xboxlist;
 
 	public function onEnable() {
-		if(!$this->getServer()->requiresAuthentication()) {
-			$this->getServer()->getLogger()->warning("To use NotMeXboxLiveAuth, you must enable online mode in server.properties. Set value of xbox-auth to true to enable online mode.");
+		if(!is_dir($this->getDataFolder())) {
+			mkdir($this->getDataFolder());
+		}
+		if(!file_exists($this->getDataFolder() . "config.yml")) {
+			$this->saveDefaultConfig();
+		}
+		if($this->getServer()->requiresAuthentication() === $invert = $this->getConfig()->get("invert")) {
+			$this->getServer()->getLogger()->warning("To use NotMeXboxLiveAuth, you must " . ($invert ? "disable (invert mode enabled)" : "enable (invert mode disabled)") . " online mode in server.properties. Set value of xbox-auth to " . ($invert ? "false" : "true") . " to " . ($invert ? "disable" : "enable") . " online mode.");
 			$this->getServer()->getPluginManager()->disablePlugin($this);
 			return;
 		}
-		@mkdir($this->getDataFolder());
 		$this->xboxlist = new Config($this->getDataFolder() . "xbox-list.txt", Config::ENUM);
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 	}
@@ -69,6 +75,10 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 							$sender->sendMessage(new TranslationContainer("commands.generic.usage", ["/xboxlist remove <player>"]));
 							return true;
 
+						case "invert":
+							$sender->sendMessage(/*new TranslationContainer("commands.generic.usage", ["/xboxlist invert [bool]"])*/TextFormat::AQUA . "Invert mode is currently " . ($this->getConfig()->get("invert") ? "enabled" : "disabled") . ".");
+							return true;
+
 						case "list":
 							$entries = $this->xboxlist->getAll(true);
 							$result = implode($entries, ", ");
@@ -99,6 +109,16 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 							$this->removeXboxlist($args[1]);
 							$sender->sendMessage(TextFormat::GREEN . "Removed " . $args[1] . " from the xboxlist");
 							return true;
+
+						case "invert":
+							if(is_bool($invert = filter_var($args[1], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE))) {
+								$this->getConfig()->set("invert", $invert);
+								$this->getConfig()->save();
+								$sender->sendMessage(TextFormat::GREEN . ($invert ? "Enabled" : "Disabled") . " invert mode - please " . ($invert ? "disable" : "enable") . " online mode.");
+							} else {
+								$sender->sendMessage(new TranslationContainer("commands.generic.usage", ["/xboxlist invert [bool]"]));
+							}
+							return true;
 					}
 				}
 		}
@@ -117,8 +137,17 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 	 * @param PlayerKickEvent $event
 	 */
 	public function onPlayerKick(PlayerKickEvent $event) {
-		if($event->getReason() === "disconnectionScreen.notAuthenticated" && $this->xboxlist->exists(strtolower($event->getPlayer()->getName()))) {
+		if($event->getReason() === "disconnectionScreen.notAuthenticated" && !$this->getConfig()->get("invert") && $this->xboxlist->exists(strtolower($event->getPlayer()->getName()))) {
 			$event->setCancelled();
+		}
+	}
+
+	/**
+	 * @param PlayerJoinEvent $event
+	 */
+	public function onPlayerJoin(PlayerJoinEvent $event) {
+		if(!$event->getPlayer()->isAuthenticated && $this->getConfig()->get("invert") && $this->xboxlist->exists(strtolower($event->getPlayer()->getName()))) {
+			$event->getPlayer()->kick("disconnectionScreen.notAuthenticated");
 		}
 	}
 

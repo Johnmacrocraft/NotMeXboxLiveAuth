@@ -1,6 +1,6 @@
 name: NotMeXboxLiveAuth
 main: Johnmacrocraft\NotMeXboxLiveAuth\NotMeXboxLiveAuth
-version: 1.0.0
+version: 1.0.1
 api: [3.0.0-ALPHA11, 3.0.0-ALPHA12]
 load: POSTWORLD
 author: Johnmacrocraft
@@ -9,7 +9,7 @@ website: https://github.com/Johnmacrocraft/NotMeXboxLiveAuth
 commands:
   xboxlist:
     description: Manages the list of players allowed to bypass Xbox Live Auth
-    usage: /xboxlist <add|remove|list|reload>
+    usage: /xboxlist <add|remove|list|invert|reload>
     permission: notmexboxliveauth.command.xboxlist
 permissions:
   notmexboxliveauth:
@@ -29,6 +29,9 @@ permissions:
                 default: op
               notmexboxliveauth.command.xboxlist.remove:
                 description: Allows using remove option of xboxlist command
+                default: op
+              notmexboxliveauth.command.xboxlist.invert:
+                description: Allows using invert option of xboxlist command
                 default: op
               notmexboxliveauth.command.xboxlist.list:
                 description: Allows using list option of xboxlist command

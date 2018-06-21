@@ -1,7 +1,7 @@
 name: NotMeXboxLiveAuth
 main: Johnmacrocraft\NotMeXboxLiveAuth\NotMeXboxLiveAuth
 version: 1.0.1
-api: [3.0.0-ALPHA11, 3.0.0-ALPHA12]
+api: [3.0.0-ALPHA11, 3.0.0-ALPHA12, 3.0.0]
 load: POSTWORLD
 author: Johnmacrocraft
 description: Allows specified players to bypass Xbox Live Auth!

@@ -31,7 +31,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 	/** @var Config */
 	public $xboxlist;
 
-	public function onEnable() {
+	public function onEnable() : void{
 		if(!is_dir($this->getDataFolder())) {
 			mkdir($this->getDataFolder());
 		}
@@ -136,7 +136,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 	/**
 	 * @param PlayerKickEvent $event
 	 */
-	public function onPlayerKick(PlayerKickEvent $event) {
+	public function onPlayerKick(PlayerKickEvent $event) : void {
 		if($event->getReason() === "disconnectionScreen.notAuthenticated" && !$this->getConfig()->get("invert") && $this->xboxlist->exists(strtolower($event->getPlayer()->getName()))) {
 			$event->setCancelled();
 		}
@@ -145,7 +145,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 	/**
 	 * @param PlayerJoinEvent $event
 	 */
-	public function onPlayerJoin(PlayerJoinEvent $event) {
+	public function onPlayerJoin(PlayerJoinEvent $event) : void {
 		if(!$event->getPlayer()->isAuthenticated && $this->getConfig()->get("invert") && $this->xboxlist->exists(strtolower($event->getPlayer()->getName()))) {
 			$event->getPlayer()->kick("disconnectionScreen.notAuthenticated");
 		}
@@ -154,7 +154,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 	/**
 	 * @param string $name
 	 */
-	public function addXboxlist(string $name) {
+	public function addXboxlist(string $name) : void {
 		$this->xboxlist->set(strtolower($name), true);
 		$this->xboxlist->save(true);
 	}
@@ -162,12 +162,12 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 	/**
 	 * @param string $name
 	 */
-	public function removeXboxlist(string $name) {
+	public function removeXboxlist(string $name) : void {
 		$this->xboxlist->remove(strtolower($name));
 		$this->xboxlist->save();
 	}
 
-	public function reloadXboxlist() {
+	public function reloadXboxlist() : void {
 		$this->xboxlist->reload();
 	}
 }

@@ -31,7 +31,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 	/** @var Config */
 	public $xboxlist;
 
-	public function onEnable() : void{
+	public function onEnable() : void {
 		if(!is_dir($this->getDataFolder())) {
 			mkdir($this->getDataFolder());
 		}

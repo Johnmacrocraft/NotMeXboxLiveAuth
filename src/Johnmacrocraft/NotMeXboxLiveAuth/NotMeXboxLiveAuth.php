@@ -81,10 +81,8 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 
 						case "list":
 							$entries = $this->xboxlist->getAll(true);
-							$result = implode($entries, ", ");
-							$count = count($entries);
-							$sender->sendMessage(TextFormat::AQUA . "There are " . $count . " xboxlisted players:");
-							$sender->sendMessage($result);
+							$sender->sendMessage(TextFormat::AQUA . "There are " . count($entries) . " xboxlisted players:");
+							$sender->sendMessage(implode($entries, ", "));
 							return true;
 
 						case "reload":

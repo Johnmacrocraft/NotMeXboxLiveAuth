@@ -130,7 +130,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 									return true;
 
 								case "list":
-									$sender->sendMessage(TextFormat::AQUA . "There are " . count($this->prefixes->getAll(true)) . " guest prefixes:");
+									$sender->sendMessage(TextFormat::AQUA . "There are " . count($prefixes = $this->prefixes->getAll(true)) . " guest prefixes:");
 									$sender->sendMessage(implode($prefixes, ", "));
 									return true;
 

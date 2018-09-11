@@ -30,6 +30,8 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 
 	/** @var Config */
 	public $xboxlist;
+	/** @var Config */
+	public $prefixes;
 
 	public function onEnable() : void {
 		if(!is_dir($this->getDataFolder())) {
@@ -44,6 +46,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 			return;
 		}
 		$this->xboxlist = new Config($this->getDataFolder() . "xbox-list.txt", Config::ENUM);
+		$this->prefixes = new Config($this->getDataFolder() . "prefixes.txt", Config::ENUM);
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 	}
 
@@ -58,7 +61,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 	public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool {
 		switch($command->getName()) {
 			case "xboxlist":
-				if(count($args) === 0 || count($args) > 2) {
+				if(count($args) === 0 || count($args) > 3) {
 					throw new InvalidCommandSyntaxException();
 				}
 
@@ -68,15 +71,16 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 					}
 					switch(strtolower($args[0])) {
 						case "add":
-							$sender->sendMessage(new TranslationContainer("commands.generic.usage", ["/xboxlist add <player>"]));
-							return true;
-
 						case "remove":
-							$sender->sendMessage(new TranslationContainer("commands.generic.usage", ["/xboxlist remove <player>"]));
+							$sender->sendMessage(new TranslationContainer("commands.generic.usage", ["/xboxlist " . strtolower($args[0]) . " <player>"]));
 							return true;
 
 						case "invert":
-							$sender->sendMessage(TextFormat::AQUA . "Invert mode is currently " . ($this->getConfig()->get("invert") ? "enabled" : "disabled") . ".");
+							$sender->sendMessage(new TranslationContainer("commands.generic.usage", ["/xboxlist invert <bool|state>"]));
+							return true;
+
+						case "prefix":
+							$sender->sendMessage(new TranslationContainer("commands.generic.usage", ["/xboxlist prefix <add|remove|list> [prefix]"]));
 							return true;
 
 						case "list":
@@ -100,23 +104,68 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 					switch(strtolower($args[0])) {
 						case "add":
 							$this->addXboxlist($args[1]);
-							$sender->sendMessage(TextFormat::GREEN . "Added " . $args[1] . " to the xboxlist");
+							$sender->sendMessage(TextFormat::GREEN . "Added $args[1] to the xboxlist");
 							return true;
 
 						case "remove":
 							$this->removeXboxlist($args[1]);
-							$sender->sendMessage(TextFormat::GREEN . "Removed " . $args[1] . " from the xboxlist");
+							$sender->sendMessage(TextFormat::GREEN . "Removed $args[1] from the xboxlist");
 							return true;
 
 						case "invert":
 							if(is_bool($invert = filter_var($args[1], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE))) {
-								$this->getConfig()->set("invert", $invert);
-								$this->getConfig()->save();
+								$this->setInvert($invert);
 								$sender->sendMessage(TextFormat::GREEN . ($invert ? "Enabled" : "Disabled") . " invert mode - please " . ($invert ? "disable" : "enable") . " online mode.");
+							} elseif($args[1] === "state") {
+								$sender->sendMessage(TextFormat::AQUA . "Invert mode is currently " . ($this->useInvert() ? "enabled" : "disabled") . ".");
 							} else {
 								$sender->sendMessage(new TranslationContainer("commands.generic.usage", ["/xboxlist invert [bool]"]));
 							}
 							return true;
+
+						case "prefix":
+							switch(strtolower($args[1])) {
+								case "add":
+								case "remove":
+									$sender->sendMessage(new TranslationContainer("commands.generic.usage", ["/xboxlist prefix " . strtolower($args[1]) . " <prefix>"]));
+									return true;
+
+								case "list":
+									$prefixes = $this->prefixes->getAll(true);
+									$sender->sendMessage(TextFormat::AQUA . "There are " . count($prefixes) . " guest prefixes:");
+									$sender->sendMessage(implode($prefixes, ", "));
+									return true;
+
+								case "reload":
+									$this->reloadPrefixes();
+									$sender->sendMessage(TextFormat::GREEN . "Reloaded the guest prefix list");
+									return true;
+
+								default:
+									$sender->sendMessage(new TranslationContainer("commands.generic.usage", ["/xboxlist prefix <add|remove|list> [prefix]"]));
+									return true;
+							}
+					}
+				} elseif(count($args) === 3) {
+					if($this->badPerm($sender, strtolower($args[0]))) {
+						return true;
+					}
+					switch(strtolower($args[0])) {
+						case "prefix":
+							if($this->useInvert()) {
+								$sender->sendMessage(TextFormat::YELLOW . "Please disable invert mode before trying to use guest prefix");
+							}
+							switch(strtolower($args[1])) {
+								case "add":
+									$this->addPrefix($args[2]);
+									$sender->sendMessage(TextFormat::GREEN . "Added $args[2] to the guest prefix list");
+									return true;
+
+								case "remove":
+									$this->removePrefix($args[2]);
+									$sender->sendMessage(TextFormat::GREEN . "Removed $args[2] from the guest prefix list");
+									return true;
+							}
 					}
 				}
 		}
@@ -133,19 +182,21 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 
 	/**
 	 * @param PlayerKickEvent $event
+	 * @priority HIGHEST
 	 */
 	public function onPlayerKick(PlayerKickEvent $event) : void {
-		if($event->getReason() === "disconnectionScreen.notAuthenticated" && !$this->getConfig()->get("invert") && $this->xboxlist->exists(strtolower($event->getPlayer()->getName()))) {
+		if(($event->getReason() === "disconnectionScreen.notAuthenticated" && !$this->getConfig()->get("invert")) && ($this->xboxlist->exists($name = strtolower($event->getPlayer()->getName())) || $this->startsWithPrefix($name))) {
 			$event->setCancelled();
 		}
 	}
 
 	/**
 	 * @param PlayerJoinEvent $event
+	 * @priority HIGHEST
 	 */
 	public function onPlayerJoin(PlayerJoinEvent $event) : void {
 		if(!$event->getPlayer()->isAuthenticated() && $this->getConfig()->get("invert") && $this->xboxlist->exists(strtolower($event->getPlayer()->getName()))) {
-			$event->getPlayer()->kick("disconnectionScreen.notAuthenticated");
+			$event->getPlayer()->kick("disconnectionScreen.notAuthenticated", false);
 		}
 	}
 
@@ -154,7 +205,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 	 */
 	public function addXboxlist(string $name) : void {
 		$this->xboxlist->set(strtolower($name), true);
-		$this->xboxlist->save(true);
+		$this->xboxlist->save();
 	}
 
 	/**
@@ -167,5 +218,54 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 
 	public function reloadXboxlist() : void {
 		$this->xboxlist->reload();
+	}
+
+	/**
+	 * @param bool $value
+	 */
+	public function setInvert(bool $value) {
+		$this->getConfig()->set("invert", $value);
+		$this->getConfig()->save();
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function useInvert() : bool {
+		return $this->getConfig()->get("invert");
+	}
+
+	/**
+	 * @param string $prefix
+	 */
+	public function addPrefix(string $prefix) {
+		$this->prefixes->set(strtolower($prefix), true);
+		$this->prefixes->save();
+	}
+
+	/**
+	 * @param string $prefix
+	 */
+	public function removePrefix(string $prefix) {
+		$this->prefixes->remove(strtolower($prefix));
+		$this->prefixes->save();
+	}
+
+	public function reloadPrefixes() : void {
+		$this->prefixes->reload();
+	}
+
+	/**
+	 * @param string $name
+	 *
+	 * @return bool
+	 */
+	public function startsWithPrefix(string $name) : bool {
+		foreach($this->prefixes->getAll(true) as $prefixes) {
+			if(strpos($name, $prefixes) === 0) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

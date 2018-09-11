@@ -221,7 +221,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 	/**
 	 * @param bool $value
 	 */
-	public function setInvert(bool $value) {
+	public function setInvert(bool $value) : void {
 		$this->getConfig()->set("invert", $value);
 		$this->getConfig()->save();
 	}
@@ -236,7 +236,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 	/**
 	 * @param string $prefix
 	 */
-	public function addPrefix(string $prefix) {
+	public function addPrefix(string $prefix) : void {
 		$this->prefixes->set(strtolower($prefix), true);
 		$this->prefixes->save();
 	}
@@ -244,7 +244,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 	/**
 	 * @param string $prefix
 	 */
-	public function removePrefix(string $prefix) {
+	public function removePrefix(string $prefix) : void {
 		$this->prefixes->remove(strtolower($prefix));
 		$this->prefixes->save();
 	}

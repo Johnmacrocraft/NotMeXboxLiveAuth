@@ -84,8 +84,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 							return true;
 
 						case "list":
-							$entries = $this->xboxlist->getAll(true);
-							$sender->sendMessage(TextFormat::AQUA . "There are " . count($entries) . " xboxlisted players:");
+							$sender->sendMessage(TextFormat::AQUA . "There are " . count($entries = $this->xboxlist->getAll(true)) . " xboxlisted players:");
 							$sender->sendMessage(implode($entries, ", "));
 							return true;
 
@@ -131,8 +130,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 									return true;
 
 								case "list":
-									$prefixes = $this->prefixes->getAll(true);
-									$sender->sendMessage(TextFormat::AQUA . "There are " . count($prefixes) . " guest prefixes:");
+									$sender->sendMessage(TextFormat::AQUA . "There are " . count($this->prefixes->getAll(true)) . " guest prefixes:");
 									$sender->sendMessage(implode($prefixes, ", "));
 									return true;
 

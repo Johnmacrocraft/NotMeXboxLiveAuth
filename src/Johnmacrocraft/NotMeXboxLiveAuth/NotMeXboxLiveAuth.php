@@ -80,7 +80,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 							return true;
 
 						case "prefix":
-							$sender->sendMessage(new TranslationContainer("commands.generic.usage", ["/xboxlist prefix <add|remove|list> [prefix]"]));
+							$sender->sendMessage(new TranslationContainer("commands.generic.usage", ["/xboxlist prefix <add|remove|list|reload> [prefix]"]));
 							return true;
 
 						case "list":

@@ -118,7 +118,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 							} elseif($args[1] === "state") {
 								$sender->sendMessage(TextFormat::AQUA . "Invert mode is currently " . ($this->useInvert() ? "enabled" : "disabled") . ".");
 							} else {
-								$sender->sendMessage(new TranslationContainer("commands.generic.usage", ["/xboxlist invert [bool]"]));
+								$sender->sendMessage(new TranslationContainer("commands.generic.usage", ["/xboxlist invert <bool|state>"]));
 							}
 							return true;
 

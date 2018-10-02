@@ -183,7 +183,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 	 * @priority HIGHEST
 	 */
 	public function onPlayerKick(PlayerKickEvent $event) : void {
-		if(($event->getReason() === "disconnectionScreen.notAuthenticated" && !$this->useInvert()) && ($this->xboxlist->exists($name = strtolower($event->getPlayer()->getName())) || $this->startsWithPrefix($name))) {
+		if(($event->getReason() === "disconnectionScreen.notAuthenticated" && !$this->useInvert()) && ($this->xboxlist->exists($name = $event->getPlayer()->getLowerCaseName()) || $this->startsWithPrefix($name))) {
 			$event->setCancelled();
 		}
 	}
@@ -193,7 +193,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 	 * @priority HIGHEST
 	 */
 	public function onPlayerJoin(PlayerJoinEvent $event) : void {
-		if(!$event->getPlayer()->isAuthenticated() && $this->useInvert() && $this->xboxlist->exists(strtolower($event->getPlayer()->getName()))) {
+		if(!$event->getPlayer()->isAuthenticated() && $this->useInvert() && $this->xboxlist->exists($event->getPlayer()->getLowerCaseName())) {
 			$event->getPlayer()->kick("disconnectionScreen.notAuthenticated", false);
 		}
 	}

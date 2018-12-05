@@ -13,7 +13,7 @@ commands:
     permission: notmexboxliveauth.command.xboxlist
 permissions:
   notmexboxliveauth:
-    description: Allows using all NotMeXboxLiveAuth permissions
+    description: Allows using all the NotMeXboxLiveAuth permissions
     default: op
     children:
       notmexboxliveauth.command:

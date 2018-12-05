@@ -184,7 +184,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 
 	/**
 	 * @param PlayerKickEvent $event
-	 * @priority HIGHEST
+	 * @priority LOWEST
 	 */
 	public function onPlayerKick(PlayerKickEvent $event) : void {
 		if(($event->getReason() === "disconnectionScreen.notAuthenticated" && !$this->useInvert()) && ($this->xboxlist->exists($name = $event->getPlayer()->getLowerCaseName()) || $this->startsWithPrefix($name))) {

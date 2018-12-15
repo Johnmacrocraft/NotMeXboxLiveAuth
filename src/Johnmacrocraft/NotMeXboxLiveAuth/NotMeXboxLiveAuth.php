@@ -264,7 +264,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 	 */
 	public function startsWithPrefix(string $name) : bool {
 		foreach($this->prefixes->getAll(true) as $prefixes) {
-			if(strpos($name, $prefixes) === 0) {
+			if(strpos(strtolower($name), $prefixes) === 0) {
 				return true;
 			}
 		}

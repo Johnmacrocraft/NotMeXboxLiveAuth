@@ -1,4 +1,4 @@
-# NotMeXboxLiveAuth [![Poggit-CI](https://poggit.pmmp.io/ci.badge/Johnmacrocraft/NotMeXboxLiveAuth/~)](https://poggit.pmmp.io/ci/Johnmacrocraft/NotMeXboxLiveAuth)
+# NotMeXboxLiveAuth [![Poggit-CI](https://poggit.pmmp.io/ci.badge/Johnmacrocraft/NotMeXboxLiveAuth/~)](https://poggit.pmmp.io/ci/Johnmacrocraft/NotMeXboxLiveAuth) [![Poggit](https://poggit.pmmp.io/shield.state/NotMeXboxLiveAuth)](https://poggit.pmmp.io/p/NotMeXboxLiveAuth)
 Allows specified players to bypass Xbox Live Auth!
 
 ## How to use

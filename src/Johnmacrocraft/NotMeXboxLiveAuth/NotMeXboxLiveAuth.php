@@ -20,7 +20,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\command\utils\InvalidCommandSyntaxException;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerKickEvent;
-use pocketmine\event\player\PlayerPreLoginEvent;
+use pocketmine\event\player\PlayerLoginEvent;
 use pocketmine\lang\TranslationContainer;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
@@ -193,10 +193,10 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 	}
 
 	/**
-	 * @param PlayerPreLoginEvent $event
+	 * @param PlayerLoginEvent $event
 	 * @priority HIGHEST
 	 */
-	public function onPlayerPreLogin(PlayerPreLoginEvent $event) : void {
+	public function onPlayerLogin(PlayerLoginEvent $event) : void {
 		if(!$event->getPlayer()->isAuthenticated() && $this->useInvert() && $this->xboxlist->exists($event->getPlayer()->getLowerCaseName())) {
 			$event->getPlayer()->kick("disconnectionScreen.notAuthenticated", false);
 		}

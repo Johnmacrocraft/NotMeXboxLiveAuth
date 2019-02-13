@@ -40,7 +40,9 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 		if(!file_exists($this->getDataFolder() . "config.yml")) {
 			$this->saveDefaultConfig();
 		}
-		if($this->getServer()->requiresAuthentication() === $invert = $this->useInvert()) {
+
+		$invert = $this->useInvert();
+		if($this->getServer()->requiresAuthentication() === $invert) {
 			$this->getLogger()->warning("To use NotMeXboxLiveAuth, you must " .
 				($invert ? "disable (invert mode enabled)" : "enable (invert mode disabled)") .
 				" online mode in server.properties. Set value of xbox-auth to " .
@@ -49,6 +51,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 			$this->getServer()->getPluginManager()->disablePlugin($this);
 			return;
 		}
+
 		$this->xboxlist = new Config($this->getDataFolder() . "xbox-list.txt", Config::ENUM);
 		$this->prefixes = new Config($this->getDataFolder() . "prefixes.txt", Config::ENUM);
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
@@ -88,7 +91,8 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 							return true;
 
 						case "list":
-							$sender->sendMessage(TextFormat::AQUA . "There are " . count($entries = $this->xboxlist->getAll(true)) . " xboxlisted players:");
+							$entries = $this->xboxlist->getAll(true);
+							$sender->sendMessage(TextFormat::AQUA . "There are " . count($entries) . " xboxlisted players:");
 							$sender->sendMessage(implode($entries, ", "));
 							return true;
 
@@ -116,7 +120,8 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 							return true;
 
 						case "invert":
-							if(is_bool($invert = filter_var($args[1], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE))) {
+							$invert = filter_var($args[1], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+							if(is_bool($invert)) {
 								$this->setInvert($invert);
 								$sender->sendMessage(TextFormat::GREEN . ($invert ? "Enabled" : "Disabled") . " invert mode - please " . ($invert ? "disable" : "enable") . " online mode.");
 							} elseif($args[1] === "state") {
@@ -134,7 +139,8 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 									return true;
 
 								case "list":
-									$sender->sendMessage(TextFormat::AQUA . "There are " . count($prefixes = $this->prefixes->getAll(true)) . " guest prefixes:");
+									$prefixes = $this->prefixes->getAll(true);
+									$sender->sendMessage(TextFormat::AQUA . "There are " . count($prefixes) . " guest prefixes:");
 									$sender->sendMessage(implode($prefixes, ", "));
 									return true;
 
@@ -187,7 +193,9 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 	 * @priority LOWEST
 	 */
 	public function onPlayerKick(PlayerKickEvent $event) : void {
-		if(($event->getReason() === "disconnectionScreen.notAuthenticated" && !$this->useInvert()) && ($this->xboxlist->exists($name = $event->getPlayer()->getLowerCaseName()) || $this->startsWithPrefix($name))) {
+		$name = $event->getPlayer()->getLowerCaseName();
+
+		if(($event->getReason() === "disconnectionScreen.notAuthenticated" && !$this->useInvert()) && ($this->xboxlist->exists($name) || $this->startsWithPrefix($name))) {
 			$event->setCancelled();
 		}
 	}

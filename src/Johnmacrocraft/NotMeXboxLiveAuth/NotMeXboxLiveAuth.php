@@ -42,7 +42,8 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 		}
 
 		if($this->getServer()->requiresAuthentication() === $invert = $this->useInvert()) {
-			$this->getLogger()->warning("To use NotMeXboxLiveAuth, you must " .
+			$this->getLogger()->warning(
+				"To use NotMeXboxLiveAuth, you must " .
 				($invert ? "disable (invert mode enabled)" : "enable (invert mode disabled)") .
 				" online mode in server.properties. Set value of xbox-auth to " .
 				($invert ? "false" : "true") . " to " . ($invert ? "disable" : "enable") . " online mode."
@@ -157,7 +158,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 					switch(strtolower($args[0])) {
 						case "prefix":
 							if($this->useInvert()) {
-								$sender->sendMessage(TextFormat::YELLOW . "Please disable invert mode before trying to use guest prefix");
+								$sender->sendMessage(TextFormat::YELLOW . "Please disable invert mode before using the guest prefix");
 							}
 							switch(strtolower($args[1])) {
 								case "add":

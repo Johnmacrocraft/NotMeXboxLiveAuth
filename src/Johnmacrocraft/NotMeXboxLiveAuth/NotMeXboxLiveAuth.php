@@ -41,7 +41,8 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 			$this->saveDefaultConfig();
 		}
 
-		if($this->getServer()->requiresAuthentication() === $invert = $this->useInvert()) {
+		$invert = $this->useInvert();
+		if($this->getServer()->requiresAuthentication() === $invert) {
 			$this->getLogger()->warning(
 				"To use NotMeXboxLiveAuth, you must " .
 				($invert ? "disable (invert mode enabled)" : "enable (invert mode disabled)") .
@@ -91,7 +92,8 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 							return true;
 
 						case "list":
-							$sender->sendMessage(TextFormat::AQUA . "There are " . count($entries = $this->xboxlist->getAll(true)) . " xboxlisted players:");
+							$entries = $this->xboxlist->getAll(true);
+							$sender->sendMessage(TextFormat::AQUA . "There are " . count($entries) . " xboxlisted players:");
 							$sender->sendMessage(implode($entries, ", "));
 							return true;
 
@@ -119,7 +121,8 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 							return true;
 
 						case "invert":
-							if(is_bool($invert = filter_var($args[1], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE))) {
+							$invert = filter_var($args[1], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+							if(is_bool($invert)) {
 								$this->setInvert($invert);
 								$sender->sendMessage(TextFormat::GREEN . ($invert ? "Enabled" : "Disabled") . " invert mode - please " . ($invert ? "disable" : "enable") . " online mode.");
 							} elseif($args[1] === "state") {
@@ -137,7 +140,8 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 									return true;
 
 								case "list":
-									$sender->sendMessage(TextFormat::AQUA . "There are " . count($prefixes = $this->prefixes->getAll(true)) . " guest prefixes:");
+									$prefixes = $this->prefixes->getAll(true);
+									$sender->sendMessage(TextFormat::AQUA . "There are " . count($prefixes) . " guest prefixes:");
 									$sender->sendMessage(implode($prefixes, ", "));
 									return true;
 

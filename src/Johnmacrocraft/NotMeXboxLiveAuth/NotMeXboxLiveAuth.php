@@ -183,7 +183,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 
 	private function badPerm(CommandSender $sender, string $perm) : bool {
 		if(!$sender->hasPermission("notmexboxliveauth.command.xboxlist.$perm")) {
-			$sender->sendMessage(new TranslationContainer(TextFormat::RED . "%commands.generic.permission"));
+			$sender->sendMessage($sender->getServer()->getLanguage()->translateString(TextFormat::RED . "%commands.generic.permission"));
 			return true;
 		}
 		return false;

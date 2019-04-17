@@ -47,7 +47,7 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 				"To use NotMeXboxLiveAuth, you must " .
 				($invert ? "disable (invert mode enabled)" : "enable (invert mode disabled)") .
 				" online mode in server.properties. Set value of xbox-auth to " .
-				($invert ? "false" : "true") . " to " . ($invert ? "disable" : "enable") . " online mode."
+				($invert ? "false" : "true") . " in order to " . ($invert ? "disable" : "enable") . " online mode."
 			);
 			$this->getServer()->getPluginManager()->disablePlugin($this);
 			return;
@@ -210,7 +210,8 @@ class NotMeXboxLiveAuth extends PluginBase implements Listener {
 	 */
 	public function onPlayerLogin(PlayerLoginEvent $event) : void {
 		if(!$event->getPlayer()->isAuthenticated() && $this->useInvert() && $this->xboxlist->exists($event->getPlayer()->getLowerCaseName())) {
-			$event->getPlayer()->kick("disconnectionScreen.notAuthenticated", false);
+			$event->setKickMessage("disconnectionScreen.notAuthenticated");
+			$event->setCancelled();
 		}
 	}
 

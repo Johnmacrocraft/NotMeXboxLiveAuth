@@ -13,32 +13,32 @@ commands:
     permission: notmexboxliveauth.command.xboxlist
 permissions:
   notmexboxliveauth:
-    description: Allows using all the NotMeXboxLiveAuth permissions
+    description: Allows the use of all the NotMeXboxLiveAuth permissions
     default: op
     children:
       notmexboxliveauth.command:
-        description: Allows using all NotMeXboxLiveAuth commands
+        description: Allows the use of all the NotMeXboxLiveAuth commands
         default: op
         children:
           notmexboxliveauth.command.xboxlist:
-            description: Allows using xboxlist command
+            description: Allows the use of xboxlist command
             default: op
             children:
               notmexboxliveauth.command.xboxlist.add:
-                description: Allows using add option of xboxlist command
+                description: Allows the use of add option of xboxlist command
                 default: op
               notmexboxliveauth.command.xboxlist.remove:
-                description: Allows using remove option of xboxlist command
+                description: Allows the use of remove option of xboxlist command
                 default: op
               notmexboxliveauth.command.xboxlist.list:
-                description: Allows using list option of xboxlist command
+                description: Allows the use of list option of xboxlist command
                 default: op
               notmexboxliveauth.command.xboxlist.invert:
-                description: Allows using invert option of xboxlist command
+                description: Allows the use of invert option of xboxlist command
                 default: op
               notmexboxliveauth.command.xboxlist.prefix:
-                description: Allows using prefix option of xboxlist command
+                description: Allows the use of prefix option of xboxlist command
                 default: op
               notmexboxliveauth.command.xboxlist.reload:
-                description: Allows using reload option of xboxlist command
+                description: Allows the use of reload option of xboxlist command
                 default: op

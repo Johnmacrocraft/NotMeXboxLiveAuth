@@ -3,42 +3,42 @@ main: Johnmacrocraft\NotMeXboxLiveAuth\NotMeXboxLiveAuth
 version: 1.1.2
 api: [3.0.0-ALPHA11, 3.0.0-ALPHA12, 3.0.0]
 load: POSTWORLD
-author: Johnmacrocraft
-description: Allows specified players to bypass Xbox Live Auth!
+author: Johnmacro
+description: Allow specified players to bypass Xbox Live authentication!
 website: https://github.com/Johnmacrocraft/NotMeXboxLiveAuth
 commands:
   xboxlist:
-    description: Manages the list of players allowed to bypass Xbox Live Auth
+    description: Manages the list of players allowed to bypass Xbox Live authentication
     usage: /xboxlist <add|remove|list|invert|prefix|reload>
     permission: notmexboxliveauth.command.xboxlist
 permissions:
   notmexboxliveauth:
-    description: Allows the use of all the NotMeXboxLiveAuth permissions
+    description: Allows the use of all permissions of NotMeXboxLiveAuth
     default: op
     children:
       notmexboxliveauth.command:
-        description: Allows the use of all the NotMeXboxLiveAuth commands
+        description: Allows the use of all commands of NotMeXboxLiveAuth
         default: op
         children:
           notmexboxliveauth.command.xboxlist:
-            description: Allows the use of xboxlist command
+            description: Allows the use of the xboxlist command
             default: op
             children:
               notmexboxliveauth.command.xboxlist.add:
-                description: Allows the use of add option of xboxlist command
+                description: Allows the use of the add option of the xboxlist command
                 default: op
               notmexboxliveauth.command.xboxlist.remove:
-                description: Allows the use of remove option of xboxlist command
+                description: Allows the use of the remove option of the xboxlist command
                 default: op
               notmexboxliveauth.command.xboxlist.list:
-                description: Allows the use of list option of xboxlist command
+                description: Allows the use of the list option of the xboxlist command
                 default: op
               notmexboxliveauth.command.xboxlist.invert:
-                description: Allows the use of invert option of xboxlist command
+                description: Allows the use of the invert option of the xboxlist command
                 default: op
               notmexboxliveauth.command.xboxlist.prefix:
-                description: Allows the use of prefix option of xboxlist command
+                description: Allows the use of the prefix option of the xboxlist command
                 default: op
               notmexboxliveauth.command.xboxlist.reload:
-                description: Allows the use of reload option of xboxlist command
+                description: Allows the use of the reload option of the xboxlist command
                 default: op

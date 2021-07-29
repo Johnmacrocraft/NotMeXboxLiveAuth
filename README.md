@@ -2,7 +2,7 @@
 Allow specified players to bypass Xbox Live authentication!
 
 ## How to use
-Drop this plugin into your plugins folder, and then use `xboxlist` command to manage the list.
+Use the `xboxlist` command to manage the xboxlist (the list of players allowed to bypass Xbox Live authentication).
 
 ## Warning
-As this plugin allows specified players to bypass Xbox Live authentication, anyone can log in with the username on the list. Therefore, you need to install an additional authentication plugin on your server to prevent anyone accessing the account.
+As this plugin allows specified players to bypass Xbox Live authentication, anyone can log in with any username on the xboxlist. Therefore, you need to install an additional authentication plugin on your server to prevent anyone from accessing those accounts.
